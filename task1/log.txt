@@ -1,0 +1,27 @@
+commit 0d99123e5659fa6edc07ec730c888af2fc0bf99f
+Author: Andrew Novogrodski <a.novogrodsky@gmail.com>
+Date:   Wed Jun 9 17:45:27 2021 +0300
+
+    Revert "Revert "rename last commite""
+    
+    This reverts commit 59401cb2e6fd292748ffea047a79b7d45d74cae6.
+
+commit 59401cb2e6fd292748ffea047a79b7d45d74cae6
+Author: Andrew Novogrodski <a.novogrodsky@gmail.com>
+Date:   Wed Jun 9 17:41:12 2021 +0300
+
+    Revert "rename last commite"
+    
+    This reverts commit 6100b8020b173f83efb693c5f3686b9d157e3643.
+
+commit 6100b8020b173f83efb693c5f3686b9d157e3643
+Author: Andrew Novogrodski <a.novogrodsky@gmail.com>
+Date:   Wed Jun 9 17:38:36 2021 +0300
+
+    rename last commite
+
+commit 98e6fa343eccbf1cdd02a26a356eaa661ce943ae
+Author: Andrew Novogrodski <a.novogrodsky@gmail.com>
+Date:   Wed Jun 9 17:34:10 2021 +0300
+
+    add .gitignore
