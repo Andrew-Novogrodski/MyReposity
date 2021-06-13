@@ -112,6 +112,6 @@ EOF
 
     echo Add service to autostart...
     systemctl enable nginx > /dev/null
-    if [ $? !=0 ]; then exit 1; fi
+    if [ $? != 0 ]; then exit 1; fi
 
     echo Job Done
