@@ -21,6 +21,10 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 if [ $? != 0 ]; then exit 1; fi
 
+echo Install Docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
 echo Adding user to group Docker and restarting machine
 sudo usermod -aG docker ubuntu
 sudo shutdown -r now
