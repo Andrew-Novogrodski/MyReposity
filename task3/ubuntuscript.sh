@@ -27,4 +27,3 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 echo Adding user to group Docker and restarting machine
 sudo usermod -aG docker ubuntu
-sudo shutdown -r now
