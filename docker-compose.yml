@@ -1,0 +1,20 @@
+version: '3'
+services:
+  nginx:
+    image: novogrodsky/nginx-ubuntu
+    env_file:
+      - novogrodsky.env
+    restart: always
+  java:
+    image: drucoder/web-server        
+    env_file:
+      - hello.env
+    restart: always
+    links:
+      - db
+  db:
+    image: postgres:11.4-alpine
+    container_name: postgres
+    env_file:
+      - database.env
+    restart: always
