@@ -6,9 +6,7 @@ services:
       - novogrodsky.env
     restart: always
   java:
-    image: drucoder/web-server        
-    env_file:
-      - hello.env
+    image: hello-world        
     restart: always
     links:
       - db
