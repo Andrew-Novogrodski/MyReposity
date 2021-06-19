@@ -1,0 +1,4 @@
+
+[client_servers]
+client1 ansible_host=172.31.6.15
+client2 ansible_host=172.31.10.124
