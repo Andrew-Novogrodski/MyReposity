@@ -5,9 +5,7 @@ services:
     image: mysql:8.0
     container_name: db
     restart: unless-stopped
-    env_file: var.env
-    environment:
-      - MYSQL_DATABASE=testwordpress
+    env_file: db.env
     volumes:
       - dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
@@ -18,10 +16,7 @@ services:
     image: wordpress:5.1.1-fpm-alpine
     container_name: wordpress
     restart: unless-stopped
-    env_file: var.env
-    environment:
-      - WORDPRESS_DB_HOST=db:3306
-      - WORDPRESS_DB_NAME=testwordpress
+    env_file: wordpress.env
     volumes:
       - wordpress:/var/www/html
     links:

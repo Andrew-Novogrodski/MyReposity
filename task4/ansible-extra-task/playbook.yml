@@ -6,6 +6,8 @@
   vars:
     ansible_user                 : ubuntu
     ansible_ssh_private_key_file : /home/ubuntu/.ssh/testSSH.pem
+    source_folder                : /home/ubuntu/ansible
+    destin_folder                : /home/ubuntu
 
   tasks:
   - name : Check OS
@@ -63,10 +65,16 @@
           src: /home/ubuntu/ansible/nginx.j2
           dest: /home/ubuntu/nginx-conf/nginx.conf
 
-      - name: copy Docker compose file
-        copy:
-          src: /home/ubuntu/ansible/docker-compose.yml
-          dest: /home/ubuntu
+      - name: copy other files
+        copy: src={{ source_folder }}/{{ item }} dest={{ destin_folder }} mode=0555
+        loop:
+           - "wordpress.env"
+           - "db.env"
+           - "docker-compose.yml"
+
+      - name: export enviroment
+        shell:
+          cmd: "export MYSQL_DATABASE=testwordpress MYSQL_USER=soul MYSQL_PASSWORD=165786 MYSQL_ROOT_PASSWORD=131313 WORDPRESS_DB_HOST=db WORDPRESS_DB_NAME=testwordpress WORDPRESS_DB_USER=165786 WORDPRESS_DB_PASSWORD=165786" 
 
       - name: deploy docker compose file
         shell:
