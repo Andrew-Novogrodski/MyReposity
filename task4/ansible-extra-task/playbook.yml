@@ -1,0 +1,75 @@
+
+---
+- name  : Docker install
+  hosts : all
+  become: yes
+  vars:
+    ansible_user                 : ubuntu
+    ansible_ssh_private_key_file : /home/ubuntu/.ssh/testSSH.pem
+
+  tasks:
+  - name : Check OS
+    debug: var=ansible_os_family
+ 
+  - block: #=======Block for Debian family OS======= 
+      - name: Updating repository
+        apt : update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Upgrading system
+        apt : upgrade=dist force_apt_get=yes
+
+      - name: Install required system packages
+        apt : name={{ item }} state=latest update_cache=yes
+        loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common' ]
+
+      - name: Add Docker GPG apt Key
+        apt_key:
+          url  : https://download.docker.com/linux/ubuntu/gpg
+          state: present
+
+      - name: Add Docker Repository
+        apt_repository:
+          repo : deb https://download.docker.com/linux/ubuntu focal stable
+          state: present
+
+      - name: Install Docker
+        apt : name={{ item }} state=latest update_cache=yes
+        loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io' ]
+
+      - name: Add user to docker group
+        user: name={{ansible_user}} group=docker
+
+      - name: Download docker-compose 
+        get_url:
+          url  : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+          dest : ~/docker-compose
+          mode : '+x'
+
+      - name: Check docker-compose exists
+        stat: path=~/docker-compose
+        register: docker_compose
+
+      - name: Move docker-compose to /usr/local/bin/docker-compose
+        command: mv ~/docker-compose /usr/local/bin/docker-compose
+        when: docker_compose.stat.exists
+
+      - name: create nginx file folder
+        file:
+          path: /home/ubuntu/nginx-conf/
+          state: directory
+
+      - name: copy nginx file
+        template:
+          src: /home/ubuntu/ansible/nginx.j2
+          dest: /home/ubuntu/nginx-conf/nginx.conf
+
+      - name: copy Docker compose file
+        copy:
+          src: /home/ubuntu/ansible/docker-compose.yml
+          dest: /home/ubuntu
+
+      - name: deploy docker compose file
+        shell:
+          cmd: "docker-compose up -d"
+ 
+    when: ansible_os_family =="Debian"

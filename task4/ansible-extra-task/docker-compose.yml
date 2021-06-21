@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=testwordpress
+      - MYSQL_USER=soul
+      - MYSQL_PASSWORD=165786
+      - MYSQL_ROOT_PASSWORD=131313
+    volumes:
+      - dbdata:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app-network
+
+  wordpress:
+    image: wordpress:5.1.1-fpm-alpine
+    container_name: wordpress
+    restart: unless-stopped
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=soul
+      - WORDPRESS_DB_PASSWORD=165786
+      - WORDPRESS_DB_NAME=testwordpress
+    volumes:
+      - wordpress:/var/www/html
+    links:
+      - db
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:1.15.12-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - wordpress:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+    links:
+      - wordpress
+    networks:
+      - app-network
+
+volumes:
+  wordpress:
+  dbdata:
+
+networks:
+  app-network:
+    driver: bridge
