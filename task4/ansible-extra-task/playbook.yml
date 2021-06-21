@@ -72,10 +72,6 @@
            - "db.env"
            - "docker-compose.yml"
 
-      - name: export enviroment
-        shell:
-          cmd: "export MYSQL_DATABASE=testwordpress MYSQL_USER=soul MYSQL_PASSWORD=165786 MYSQL_ROOT_PASSWORD=131313 WORDPRESS_DB_HOST=db WORDPRESS_DB_NAME=testwordpress WORDPRESS_DB_USER=165786 WORDPRESS_DB_PASSWORD=165786" 
-
       - name: deploy docker compose file
         shell:
           cmd: "docker-compose up -d"
