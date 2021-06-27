@@ -3,20 +3,13 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent any 
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
-        timestamps()
+    agent {
+        docker { image 'docker pull docker:20.10' }
     }
     stages {
-        stage("First step") {
+        stage('Test') {
             steps {
                 sh 'docker ps -a'
-            }
-        }
-        stage("Second step") {
-            steps {
-                sh 'ssh root@ub1 \'uptime\''
             }
         }
     }
