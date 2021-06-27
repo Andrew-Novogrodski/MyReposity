@@ -3,11 +3,15 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent { dockerfile true }
+    agent {
+        label 'master' 
+    }
     stages {
-        stage('Test') {
+        stage("create docker image") {
             steps {
-                echo 'hello world'
+                echo "=======starting building image====="
+                dir ('task3')
+                sh 'docker build .'
                 sh 'echo DEVOPS=$DEVOPS'
             }
         }
