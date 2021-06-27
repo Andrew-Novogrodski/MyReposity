@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo "=======starting building image====="
                 dir ('task3') {
-                    sh 'docker build .'
+                    sh 'docker build -t novogrodsky/nginx-ubuntu:latest .'
                 }    
             }
         }
