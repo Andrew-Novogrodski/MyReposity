@@ -4,7 +4,7 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     agent {
-        label 'master' 
+        label 'slave-host' 
     }
     stages {
         stage("create docker image") {
@@ -12,7 +12,6 @@ pipeline {
                 echo "=======starting building image====="
                 dir ('task3')
                 sh 'docker build .'
-                sh 'echo DEVOPS=$DEVOPS'
             }
         }
     }
