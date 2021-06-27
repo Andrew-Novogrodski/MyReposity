@@ -4,7 +4,7 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     agent {
-        docker { image 'docker pull docker:latest' }
+        docker { image 'docker:latest' }
     }
     stages {
         stage('Test') {
