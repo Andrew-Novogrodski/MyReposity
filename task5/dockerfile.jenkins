@@ -1,0 +1,15 @@
+#!groovy
+// Check ub1 properties
+properties([disableConcurrentBuilds()])
+
+pipeline {
+    agent { dockerfile true }
+    stages {
+        stage('Test') {
+            steps {
+                echo 'hello world'
+                sh 'echo DEVOPS=$DEVOPS'
+            }
+        }
+    }
+}
