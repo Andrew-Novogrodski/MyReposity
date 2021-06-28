@@ -20,5 +20,6 @@ pipeline {
                 docker run -d --rm -p 80:80 novogrodsky/nginx-ubuntu:latest
                 '''
             } 
+        }
     }
 }
