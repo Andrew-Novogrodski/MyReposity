@@ -9,9 +9,7 @@ pipeline {
                     PASSWORD = credentials('password-task')
                 }
             steps {
-              sh 'export PASSWORD=$PASSWORD'
               sh 'echo My PASSWORD is $PASSWORD'
-              sh 'sleep 300'
             }
         }
     }
