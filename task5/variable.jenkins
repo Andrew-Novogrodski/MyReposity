@@ -1,0 +1,16 @@
+#!groovy 
+pipeline {
+    agent {
+        label 'docker-jnlp-slave' 
+    }
+    stages {
+        stage("set variable") {
+                environment {
+                    PASSWORD = credentials('password-task')
+                }
+            steps {
+              sh "echo 'My PASSWORD is $PASSWORD'"
+            }
+        }
+    }
+}
