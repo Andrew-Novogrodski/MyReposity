@@ -1,0 +1,35 @@
+---
+- name  : Jenkins install
+  hosts : all
+  become: yes
+  vars:
+    ansible_user                 : ubuntu
+    ansible_ssh_private_key_file : /home/ubuntu/.ssh/testSSH.pem
+
+  tasks:
+  - name : Check OS
+    debug: var=ansible_os_family
+ 
+  - block: #=======Block for Debian family OS======= 
+      - name: Updating repository
+        apt : update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: Upgrading system
+        apt : upgrade=dist force_apt_get=yes
+
+      - name: Install required system packages Java 11
+        apt : name=openjdk-11-jdk state=latest update_cache=yes
+
+      - name: Ensure that the Jenkins apt repository key is installed
+        apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
+
+      - name: Ensure that the repository is configured
+        apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
+
+      - name: Install Jenkins
+        apt: name=jenkins update_cache=yes
+
+      - name: Ensure jenkins is running
+        service: name=jenkins state=started
+
+    when: ansible_os_family =="Debian"
