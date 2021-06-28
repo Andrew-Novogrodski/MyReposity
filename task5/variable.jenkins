@@ -9,7 +9,7 @@ pipeline {
                     PASSWORD = credentials('password-task')
                 }
             steps {
-              sh "echo 'My PASSWORD is $PASSWORD'"
+              sh 'echo 'My PASSWORD is $PASSWORD''
             }
         }
     }
