@@ -13,5 +13,12 @@ pipeline {
                 }    
             }
         }
+        stage("run docker container") {
+            steps {
+                echo "======run container======="
+                sh '''
+                docker run -d --rm -p 80:80 novogrodsky/nginx-ubuntu:latest
+                '''
+            } 
     }
 }
