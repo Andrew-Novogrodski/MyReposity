@@ -1,0 +1,25 @@
+#!groovy
+
+pipeline { 
+    agent any
+    stages {
+        stage("pulling image from registry") {
+            steps {
+                script {
+                    docker.withRegistry('http://3.65.21.125:5000') {
+                    image = docker.image('novogrodsky/nginx:v1')
+                    image.pull()
+                    }
+                }
+            }
+        }
+        stage("run docker container") {
+            steps {
+                echo "======run container======="
+                sh '''
+                docker run -d --rm -p 80:80 novogrodsky/nginx:v1
+                '''
+            }
+        }
+    }
+}
