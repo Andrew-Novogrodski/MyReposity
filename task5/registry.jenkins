@@ -6,7 +6,7 @@ pipeline {
         stage("pulling image from registry") {
             steps {
                 sh '''
-                docker pull http://3.65.21.125:5000/novogrodsky/nginx:v1
+                docker pull 3.65.21.125:5000/novogrodsky/nginx:v1
                 '''
             }
         }
@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo "======run container======="
                 sh '''
-                docker run -d --rm -p 80:80 novogrodsky/nginx:v1
+                docker run -d --rm -p 80:80 3.65.21.125:5000/novogrodsky/nginx:v1
                 '''
             }
         }
