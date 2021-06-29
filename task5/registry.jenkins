@@ -6,8 +6,8 @@ pipeline {
         stage("pulling image from registry") {
             steps {
                 script {
-                    docker.withRegistry('http://3.65.21.125:5000') {
-                    image = docker.image('novogrodsky/nginx:v1')
+                    docker.withRegistry('http://3.65.21.125:5000', 'novogrodsky') {
+                    image = docker.image('nginx:v1')
                     image.pull()
                     }
                 }
