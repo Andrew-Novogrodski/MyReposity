@@ -1,0 +1,8 @@
+
+---
+- name  : MYSQL_Cluster install
+  hosts : all
+  become: yes
+
+  roles:
+    - { role: deploy_mysql_galera_cluster, when ansible_os_family == 'Debian' }

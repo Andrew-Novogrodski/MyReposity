@@ -1,0 +1,8 @@
+#[mysql_slave_node]
+#mysql_node_2 ansible_host=172.31.9.202 ansible_port=22
+
+#[mysql_main_node]
+#mysql_node_1 ansible_host=172.31.6.61 ansible_port=22
+[mysql_server]
+mysql_node_1 ansible_host=172.31.3.27 ansible_port=22
+

@@ -1,0 +1,81 @@
+use internship;
+
+/*create table Students (*/
+create table if not exists Students (
+Student varchar(100) NOT NULL,
+StudentID int (10) NOT NULL,
+PRIMARY KEY (StudentID)
+);
+
+create table if not exists Result (
+StudentID int (10) NOT NULL,
+Task1 varchar(20),
+Task2 varchar(20),
+Task3 varchar(20),
+Task4 varchar(20),
+Task5 varchar(20),
+PRIMARY KEY (StudentID),
+FOREIGN KEY (StudentID) REFERENCES Students (StudentID)
+);
+
+INSERT IGNORE INTO Students (Student, StudentID) VALUES
+('Назар Винник', 1),
+('Александр Рекун', 2),
+('Олег Бандрівський', 3),
+('Владимир Бурдыко', 4),
+('Вадим Марков', 5),
+('Игорь Войтух', 7),
+('Дмитрий Мошна', 8),
+('Евгений Козловский', 9),
+('Эд Еленский', 10),
+('Игорь Зинченко', 11),
+('Виталий Костюков', 14),
+('Евгений Лактюшин', 16),
+('Михаил Лопаев', 18),
+('Михаил Мостыка', 19),
+('Андрей Новогродский', 20),
+('Сазонова Анна', 21),
+('Дмитрий Соловей', 22),
+('Артём Фортунатов', 23),
+('Хоменко Іван', 24),
+('Алексей Шутов', 26),
+('Юрий Щербина', 27)
+;
+
+INSERT IGNORE INTO Result (StudentID, Task1, Task2, Task3, Task4, Task5) VALUES 
+(1, 'done', 'done +', 'done +', 'done +', 'done'),
+(2, 'done +', 'done +', 'done +', 'done +', 'done +'),
+(3, 'done', 'done +', 'done +', 'done +', 'done +'),
+(4, 'done +', 'done +', 'done', 'done', 'done'),
+(5, 'done', 'done', 'done', 'done', 'not completed'),
+(7, 'done +', 'done +', 'done +', 'done +', 'done +'),
+(8, 'done', 'not completed', 'done', 'done', 'not completed'),
+(9, 'done', 'done +', 'done', 'done', 'done'),
+(10, 'done +', 'done +', 'done +', 'done', 'done'),
+(11, 'done', 'done', 'done', 'done', 'done'),
+(14, 'done', 'done +', 'done +', 'done +', 'done +'),
+(16, 'done', 'done +', 'done', 'done', 'done +'),
+(18, 'done', 'done +', 'done +', 'done +', 'done +'),
+(19, 'done', 'done +', 'done +', 'done +', 'done'),
+(20, 'done', 'done +', 'done +', 'done +', 'done +'),
+(21, 'done +', 'done +', 'done +', 'done +', 'done +'),
+(22, 'done +', 'done +', 'done +', 'done +', 'done'),
+(23, 'done', 'done', 'done +', 'done +', 'done'),
+(24, 'done', 'done', 'done', 'done', 'not completed'),
+(26, 'done', 'done +', 'done +', 'done +', 'done +'),
+(27, 'done +', 'done +', 'done +', 'done +', 'done +')
+;
+
+SELECT * FROM Students; 
+SELECT * FROM Result; 
+
+CREATE VIEW VT AS
+SELECT  Students.Student, Result.Task1, Result.Task2, Result.Task3, Result.Task4, Result.Task5
+     FROM  Students LEFT OUTER JOIN Result
+     ON  Students.StudentID =Result.StudentID
+;
+
+SELECT * FROM VT; 
+SELECT * FROM VT
+where VT.student like '%Новогродский%';
+drop VIEW VT;

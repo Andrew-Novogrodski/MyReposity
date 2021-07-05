@@ -1,0 +1,105 @@
+---
+# tasks file for deploy_mysql_galera_cluster
+
+   - name: Updating repository
+     apt : update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+   - name: Upgrading system
+     apt : upgrade=dist force_apt_get=yes
+
+   - name: import repository key
+     apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=BC19DDBA  
+ 
+   - name: add apt repository for mysql-wsrep-8.0 and Galera Cluster
+     apt_repository: repo='{{ item }}'
+       state=present update_cache=yes
+     loop:
+        - "deb http://releases.galeracluster.com/mysql-wsrep-8.0/ubuntu focal main"
+        - "deb http://releases.galeracluster.com/galera-4/ubuntu focal main"
+
+   - name: insert/update "Match User" configuration block in /etc/ssh/sshd_config
+     blockinfile:
+       path: /etc/apt/preferences.d/mysql-galera-cluster.pref
+       block: |
+         Package: *
+         Pin: origin releases.galeracluster.com
+         Pin-Priority: 1001
+
+# Install Mysql and Galera Cluster packages
+
+   - name: install Mysql-server 8.0 and Galera Cluster packages
+     apt:
+      name: '{{ item }}'
+      update_cache: yes
+     loop:
+       - galera-4
+       - mysql-wsrep-8.0
+       - python3-pip
+       - python3-mysqldb
+
+   - name: Disable mysql systemd unit to prevent cluster from starting in wrong order
+     systemd: name=mysql enabled=no
+
+   - name: Disable mysql AppArmor rule
+     file:
+      src: /etc/apparmor.d/usr.sbin.mysqld
+      dest: /etc/apparmor.d/disable/usr.sbin.mysqld
+      state: link
+      force: yes
+
+   - name: Restart AppArmor
+     systemd: state=restarted name=apparmor
+
+# Create Mysql Galera Cluster Configuration file
+
+   - name: Create Mysql Galera Cluster Configuration file     
+     template:
+       src: galera.j2
+       dest: /etc/mysql/conf.d/galera.cnf
+       owner: mysql
+       group: mysql
+
+   - name: Stop slave mysql nodes
+     systemd: state=stopped name=mysql
+     when: inventory_hostname != groups['mysql_main_node'][0]
+
+   - name: Wait 5 seconds to safely shutdown all mysql_slave_node
+     pause:
+      seconds: 5
+
+   - name: Stop mysql_slave_node
+     systemd: state=stopped name=mysql
+     when: inventory_hostname != groups['mysql_slave_node'][0]
+
+   - name: Wait 5 seconds to safely shutdown mysql_slave_node
+     pause:
+      seconds: 5
+
+   - name: Bootstarping mysql_main_node
+     shell: /usr/bin/mysqld_bootstrap
+     when: inventory_hostname == groups['mysql_main_node'][0]
+
+   - name: Wait 5 seconds after bootstarping  main_mysql_node
+     pause:
+      seconds: 5
+
+   - name: Start slave Mysql nodes
+     systemd: state=started name=mysql
+     when: inventory_hostname == groups['mysql_slave_node'][0]
+
+   - name: Wait 5 seconds starting mysql_slave_node
+     pause:
+      seconds: 5
+
+# Add mysql root password
+
+   - name: Set mysql root user password
+     mysql_user:
+      name: root
+      check_implicit_admin: yes 
+      login_user: root
+      login_password: '{{ mysql_root_password }}'
+      password: '{{ mysql_root_password }}'
+      priv: '*.*:ALL'
+      state: present
+      update_password: always
