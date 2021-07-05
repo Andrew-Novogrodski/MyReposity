@@ -1,0 +1,18 @@
+#!groovy
+
+pipeline { 
+    agent {
+        label 'ansible'
+    }
+    stages {
+        stage("run ansible playbook") {
+            steps {
+                echo "======run playbook======="
+                sh '''
+                cd /home/ubuntu/ansible
+                ansible-playbook playbook.yml
+                '''
+            }
+        }
+    }
+}
