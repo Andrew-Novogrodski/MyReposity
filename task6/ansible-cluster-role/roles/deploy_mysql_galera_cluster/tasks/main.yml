@@ -19,6 +19,7 @@
 
    - name: insert/update "Match User" configuration block in /etc/ssh/sshd_config
      blockinfile:
+       create: yes
        path: /etc/apt/preferences.d/mysql-galera-cluster.pref
        block: |
          Package: *
