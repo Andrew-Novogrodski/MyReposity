@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+      - name: {{ .Values.app.name }}
+        image: {{ .Values.containers.app_image }}
+        env:
+        - name: MONGO_URL
+          value: {{ .Values.app.env.uri }}
+        - name: MAIL_URL
+          value: {{ .Values.app.env.url }}
+        ports:
+        - containerPort: {{ .Values.app.containerPort }}

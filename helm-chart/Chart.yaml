@@ -1,0 +1,13 @@
+apiVersion: v2
+name: NASA
+description: Deployment
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+keywords:
+   - rocketchat
+
+maintainers:
+   - giturl: https://gitlab.com/Andrew-Novogrodski/Rocket-Chat
+   - container_registry: https://gitlab.com/Andrew-Novogrodski/Rocket-Chat/container_registry

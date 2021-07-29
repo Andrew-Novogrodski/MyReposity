@@ -1,0 +1,25 @@
+#namespace for deploy
+namespace: project
+
+#rocketchat default values 
+app:
+  name: rocketchat
+  containerPort: 3000
+  env:
+    uri: 'mongodb://mongo-0.mongo:27017/rocketchat'
+    url: 'smtp://smtp.email'
+  service:
+    name: rocket-service
+    port: 3000
+    targetPort: 3000
+  hpa:
+    minReplicas: 2
+    maxReplicas: 4
+    resource:
+      cpu: 70
+  ingress:
+    name: ingress-resource
+
+#docker images:
+containers:
+  app_image: registry.rocket.chat/rocketchat/rocket.chat:latest
