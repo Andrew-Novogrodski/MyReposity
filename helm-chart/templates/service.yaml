@@ -7,7 +7,7 @@ spec:
   selector:
     app: {{ .Values.app.name }}
   ports:
-    - protocol: TCP
+    - name: listener
+      protocol: TCP
       port: {{ .Values.app.service.port }}
       targetPort: {{ .Values.app.service.targetPort }}
-  type: ClusterIP
