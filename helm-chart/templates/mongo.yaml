@@ -1,0 +1,142 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.db.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: {{ .Values.db.service.name }}
+  podManagementPolicy: OrderedReady
+  replicas: {{ .Values.db.replicas }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.db.name }}
+      app.kubernetes.io/component: {{ .Values.db.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.db.name }}
+        app.kubernetes.io/component: {{ .Values.db.name }}
+    spec:
+      serviceAccountName: {{ .Values.db.name }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: mongodb
+              namespaces:
+              - project
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      securityContext:
+        fsGroup: 1001
+        sysctls: []
+      containers:
+      - name: {{ .Values.db.name }}
+        image: docker.io/bitnami/mongodb:4.4.4
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+        command:
+        - /scripts/setup.sh
+        env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_SERVICE_NAME
+          value: "mongodb-headless"
+        - name: MONGODB_INITIAL_PRIMARY_HOST
+          value: "mongodb-0.$(K8S_SERVICE_NAME)"
+        - name: MONGODB_ADVERTISED_HOSTNAME
+          value: "$(MY_POD_NAME).$(K8S_SERVICE_NAME)"
+        - name: MONGODB_USERNAME
+          value: "rocketchat"
+        - name: MONGODB_DATABASE
+          value: "rocketchat"
+        - name: MONGODB_REPLICA_SET_NAME
+          value: "rs0"
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretname }}
+              key: mongodb-password
+        - name: MONGODB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretname }}
+              key: mongodb-root-password
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretname }}
+              key: mongodb-replica-set-key
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MONGODB_SYSTEM_LOG_VERBOSITY
+          value: "0"
+        - name: MONGODB_DISABLE_SYSTEM_LOG
+          value: "no"
+        - name: MONGODB_ENABLE_IPV6
+          value: "no"
+        - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+          value: "no"
+        ports:
+        - containerPort: {{ .Values.db.port }}
+          name: {{ .Values.db.name }}
+        livenessProbe:
+          exec:
+            command:
+            - mongo
+            - --disableImplicitSessions
+            - --eval
+            - "db.adminCommand('ping')"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - bash
+            - -ec
+            - |
+              mongo --disableImplicitSessions $TLS_OPTIONS --eval 'db.hello().isWritablePrimary || db.hello().secondary' | grep -q 'true'
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        volumeMounts:
+        - name: datadir
+          mountPath: /bitnami/mongodb
+          subPath: 
+        - name: scripts
+          mountPath: /scripts/setup.sh
+          subPath: setup.sh
+      volumes:
+      - name: scripts
+        configMap:
+          name: mongodb-scripts
+          defaultMode: 0755
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi
