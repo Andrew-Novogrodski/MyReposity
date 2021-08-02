@@ -5,13 +5,15 @@
 ---
 Содержание:
 
-1. [Интеграция Github c Gitlab. Настройка ранеров](#github_integration)
-2. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-3. [Установка стэка Grafana & Prometheus](#monitoring)
-4. [Настройка Google Alerts](#alerting)
-5. [Cоздание GCS bucket и установка системы резервирования данных Velero](#backup)
-6. [Установка и настройка NGINX Ingress Controller](#nginx)
-7. [Настройка доменного имени и SSL сертификата](#domain)
+1. [Интеграция Github c Gitlab. Запуск Gitlab Runners.](#github_integration)
+2. [Работа с Google Cloud и настройка соединения с ним через Google SDK.](#google)
+3. [Запуск Kubernetes.](#kubernetes_install)
+3. [Установка стэка Grafana & Prometheus.](#monitoring)
+4. [Настройка Google Alerts.](#alerting)
+5. [Cоздание GCS bucket и установка системы резервирования данных Velero.](#backup)
+6. [Установка и настройка NGINX Ingress Controller.](#nginx)
+7. [Настройка доменного имени и .](#domain)
+8. [Настройка доменного имени и SSL сертификата.](#domain)
 
 ---
 <a name="github_integration">Для реализации данного проекта была сделана ветка из официального репозитория [RocketChat](https://github.com/RocketChat/Rocket.Chat) и настроен web hook для интеграции с [GitLab репозиторием нашего проекта](https://gitlab.com/Andrew-Novogrodski/Rocket-Chat).</a>
@@ -145,7 +147,7 @@ rm .bash_logout
 Позднее мы еще вернемся к описанию настройки этих установленных приложений согласно нашего кластера, который создадим ниже.
 
 ---
-<a name="kubernetes_install">Настройка соединения с Google Cloud и запуск Kubernetes:</a>
+<a name="google">Настройка Google Cloud и запуск Kubernetes:</a>
 
 - Создаем учетную запись и привязываем к ней Google Cloud
 - Переходим в Cloud console, создаем проект и активируем нужные API (Kubernetes Engine, Cloud Storage, Cloud DNS API)
@@ -174,7 +176,7 @@ rm .bash_logout
     sudo mv linux-amd64/helm /bin/ && rm -rf linux-amd64/ && rm helm-v3.6.3-linux-amd64.tar.gz
     ```
 
-    Создаем кластер:
+    <a name="kubernetes_install">Создаем кластер:</a>
     - Способ №1:
         ```
         gcloud container clusters create <name>
