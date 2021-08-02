@@ -3,10 +3,17 @@
 ## **Exadel Internship project from NASA-team:**
  ***Novogrodski Andrew & Sazonova Anna***
 ---
-Содержание
-[Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+Содержание:
+
+1. [Интеграция Github c Gitlab. Настройка ранеров](#github_integration)
+2. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+3. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+4. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+5. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+6. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+7. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
 ---
-  Для реализации данного проекта была сделана ветка из официального репозитория [RocketChat](https://github.com/RocketChat/Rocket.Chat) и настроен web hook для интеграции с [GitLab репозиторием нашего проекта](https://gitlab.com/Andrew-Novogrodski/Rocket-Chat).
+<a name="github_integration">Для реализации данного проекта была сделана ветка из официального репозитория [RocketChat](https://github.com/RocketChat/Rocket.Chat) и настроен web hook для интеграции с [GitLab репозиторием нашего проекта](https://gitlab.com/Andrew-Novogrodski/Rocket-Chat).</a>
 
 ![fork](./screenshots/fork_github.png )
 
