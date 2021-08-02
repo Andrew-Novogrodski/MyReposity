@@ -5,9 +5,6 @@ namespace: project
 app:
   name: rocketchat
   containerPort: 3000
-  env:
-    uri: 'mongodb://mongo-0.mongo:27017/rocketchat'
-    url: 'smtp://smtp.email'
   service:
     name: rocket-service
     port: 3000
@@ -19,6 +16,17 @@ app:
       cpu: 70
   ingress:
     name: ingress-resource
+
+#mongodb
+db:
+  name: mongodb
+  port: 27017
+  replicas: 3
+  secretname: mongo
+  service:
+    name: mongodb-headless
+    port: 27017
+    targetPort: 27017
 
 #docker images:
 containers:
