@@ -7,11 +7,12 @@
 
 1. [Интеграция Github c Gitlab. Настройка ранеров](#github_integration)
 2. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-3. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-4. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-5. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-6. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
-7. [Настройка соединения с Google Cloud и запуск Kubernetes](#kubernetes_install)
+3. [Установка стэка Grafana & Prometheus](#monitoring)
+4. [Настройка Google Alerts](#alerting)
+5. [Cоздание GCS bucket и установка системы резервирования данных Velero](#backup)
+6. [Установка и настройка NGINX Ingress Controller](#nginx)
+7. [Настройка доменного имени и SSL сертификата](#domain)
+
 ---
 <a name="github_integration">Для реализации данного проекта была сделана ветка из официального репозитория [RocketChat](https://github.com/RocketChat/Rocket.Chat) и настроен web hook для интеграции с [GitLab репозиторием нашего проекта](https://gitlab.com/Andrew-Novogrodski/Rocket-Chat).</a>
 
@@ -209,7 +210,7 @@ gcloud init
 ![gitlab new project](./screenshots/kubectl_link.png)
 
 ---
-Для мониторинга установливаем prometheus и grafana stack:
+<a name="monitoring">Для мониторинга установливаем prometheus и grafana stack:</a>
 1. Добавляем нужные репозитории и обновляем список:
 ```
 helm repo add stable https://charts.helm.sh/stable
@@ -261,7 +262,7 @@ helm install grafana-prometheus \
   prometheus-community/kube-prometheus-stack
 ```
 ---
-Alerting:
+<a name="alerting">Alerting:</a>
 1. Заходим в Google cloud console
 2. Выбираем Monitoring -> Alerting
 3. Нажимаем Create policy -> Add condition
@@ -274,7 +275,7 @@ Alerting:
 
 ---
  
-Система backup в проекте основана на создание GCS bucket и инструменте [Velero](https://github.com/vmware-tanzu/velero-plugin-for-gcp#Create-an-GCS-bucket).
+<a name="backup">Система backup в проекте основана на создание GCS bucket и инструменте [Velero](https://github.com/vmware-tanzu/velero-plugin-for-gcp#Create-an-GCS-bucket).</a>
 
 - [Создание Google Storage buckets](https://cloud.google.com/storage/docs/creating-buckets):
   1. Заходим в Google Cloud Console -> Cloud Storage Browser
@@ -348,7 +349,7 @@ Alerting:
     velero create schedule <имя расписания>  --schedule=”@every ..” либо “* * * * *”
     ```
 ---
-Настройка NGINX Ingress Controller:
+<a name="nginx">Настройка NGINX Ingress Controller:</a>
 1. Добавление нужных ролей аккаунту:
 ```
 kubectl create clusterrolebinding cluster-admin-binding \
@@ -362,7 +363,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 3) Написание [манифестов ingress](.helm_deploy/templates/nginx-ingress.yaml)
 
 ---
- Настройка доменного имени и SSL сертификата
+<a name="domain">Настройка доменного имени и SSL сертификата</a>
 
 - Регистрация доменного имени:
 1. Заходим на любой регистратор доменных имен (можно бесплатный), в проекте использован Domain.by) и проверяем доступность доменного имени;
